@@ -1,20 +1,26 @@
 import React from 'react';
 
+import {useSelector} from 'react-redux';
+
+import Loading from '../components/Loading';
+import {ApplicationState} from '../store';
+import {AuthState} from '../store/modules/Auth/types';
+
 import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 
-import {useAuth} from '../hooks/Auth';
-
-import Loading from '../components/Loading';
-
 const Routes: React.FC = () => {
-  const {user, loading} = useAuth();
+  const {loading, logged}: AuthState = useSelector<ApplicationState>(
+    state => state.auth,
+  );
+
+  //const {user, loading} = useAuth();
 
   if (loading) {
     return <Loading />;
   }
 
-  return user ? <AppRoutes /> : <AuthRoutes />;
+  return logged ? <AppRoutes /> : <AuthRoutes />;
 };
 
 export default Routes;

@@ -7,17 +7,19 @@ import {
   Platform,
   TextInput,
   Alert,
+  Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
-
-import {useAuth} from '../../hooks/Auth';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import {loadSing} from '../../store/modules/Auth/actions';
 
 import {Container, Title} from './styles';
 import colors from '../../helpers/colors';
+import {AuthState} from '../../store/modules/Auth/types';
+import {ApplicationState} from '../../store';
 
 interface SignInFormData {
   email: string;
@@ -25,19 +27,20 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  const navigation = useNavigation();
+  //const {signIn} = useAuth();
+  const {error}: AuthState = useSelector<ApplicationState>(state => state.auth);
 
-  const {signIn} = useAuth();
+  const dispatch = useDispatch();
 
   const passwordInputRef = useRef<TextInput>(null);
 
   const handleSignin = useCallback(
-    async (data: SignInFormData) => {
+    (data: SignInFormData) => {
       try {
-        await signIn({email: data.email, password: data.password});
-
-        // Alert.alert('logado', user?.name);
-        navigation.navigate('Dashboard');
+        dispatch(
+          loadSing({email: 'saviopf22@gmail.com', password: '6VIGa1$zCUW'}),
+        );
+        console.log(data);
       } catch (error) {
         if (error.response) {
           console.log(error.response);
@@ -49,7 +52,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [signIn, navigation],
+    [dispatch],
   );
 
   return (
@@ -93,6 +96,8 @@ const SignIn: React.FC = () => {
             />
 
             <Button onPress={handleSignin}>Entrar</Button>
+
+            <Text>{error}</Text>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
