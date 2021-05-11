@@ -20,7 +20,13 @@ export interface UserState {
 
 export interface AuthState {
   user: UserState;
+  accessToken?: string;
   error?: string;
   logged: boolean;
   loading: boolean;
+}
+
+export interface SingnInSucessPayload {
+  user: UserState;
+  accessToken: string;
 }

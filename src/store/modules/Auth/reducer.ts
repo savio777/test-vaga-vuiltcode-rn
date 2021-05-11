@@ -10,6 +10,7 @@ const initialState: AuthState = {
     lastName: '',
     fullName: '',
   },
+  accessToken: '',
   logged: false,
   loading: false,
   error: '',
@@ -24,7 +25,8 @@ const authReducer: Reducer<AuthState> = (
       return {...state, loading: true, error: ''};
     case AuthTypes.SINGN_IN_USER:
       return {
-        user: action.payload.user,
+        user: action.payload.data.data.user,
+        accessToken: action.payload.data.data.accessToken,
         error: '',
         loading: false,
         logged: true,

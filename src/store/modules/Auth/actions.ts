@@ -1,11 +1,11 @@
 import {action} from 'typesafe-actions';
 
-import {AuthTypes, UserState, UserCredentialsSing} from './types';
+import {AuthTypes, UserCredentialsSing, SingnInSucessPayload} from './types';
 
 export const singninError = (error: string) =>
   action(AuthTypes.SIGNIN_ERROR, {error});
 
-export const singninSucess = (data: UserState) =>
+export const singninSucess = (data: SingnInSucessPayload) =>
   action(AuthTypes.SINGN_IN_USER, {data});
 
 export const loadSing = (data: UserCredentialsSing) =>

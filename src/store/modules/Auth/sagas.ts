@@ -7,18 +7,12 @@ import {UserCredentialsSing} from './types';
 
 export function* load(data: object) {
   try {
-    console.log('data', data);
-
     const credentials: UserCredentialsSing = data.payload.data;
-
-    console.log('credentials', credentials);
 
     const response = yield call(api.post, '/auth', {
       email: credentials.email,
       password: credentials.password,
     });
-
-    console.log(response.data);
 
     yield put(singninSucess(response.data));
   } catch (err) {

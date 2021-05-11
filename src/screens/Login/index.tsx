@@ -1,11 +1,11 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 
 import {
   View,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
+  //TextInput,
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,17 +30,23 @@ const SignIn: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const passwordInputRef = useRef<TextInput>(null);
+  //const passwordInputRef = useRef<TextInput>(null);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (__DEV__) {
+      setEmail('saviopf22@gmail.com');
+      setPassword('6VIGa1$zCUW');
+    }
+  }, []);
 
   const handleSignin = useCallback(
     (data: SignInFormData) => {
       try {
         //loadSing({email: 'saviopf22@gmail.com', password: '6VIGa1$zCUW'}),
         dispatch(loadSing({email, password}));
-        console.log(data);
       } catch (error) {
         if (error.response) {
           console.log(error.response);
@@ -80,19 +86,19 @@ const SignIn: React.FC = () => {
               autoCorrect={false}
               autoCompleteType="off"
               returnKeyType="next"
-              onSubmitEditing={() => {
+              /*onSubmitEditing={() => {
                 passwordInputRef?.current?.focus();
-              }}
+              }}*/
             />
             <Input
               value={password}
               onChangeText={setPassword}
-              ref={passwordInputRef}
+              //ref={passwordInputRef}
               placeholder="Senha"
               textContentType="newPassword"
               returnKeyType="send"
               secureTextEntry
-              onSubmitEditing={handleSignin}
+              //onSubmitEditing={handleSignin}
             />
 
             <Button principal onPress={handleSignin}>
