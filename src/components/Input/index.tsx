@@ -1,7 +1,11 @@
 import React from 'react';
 
-import {Container} from './styles';
+import {TextInputProps} from 'react-native';
 
-const Input: React.FC = () => <Container />;
+import {TextInput} from './styles';
+
+const Input: React.FC<TextInputProps> = ({...props}) => (
+  <TextInput {...props} />
+);
 
 export default Input;

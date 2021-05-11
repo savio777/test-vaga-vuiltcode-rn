@@ -24,8 +24,8 @@ export function* load(data: object) {
   } catch (err) {
     console.log('err', err.response);
 
-    if (err?.response?.errors) {
-      yield put(singninError(err?.response?.errors[0]));
+    if (err?.response?.data?.errors) {
+      yield put(singninError(err?.response?.data?.errors[0]));
     } else {
       yield put(singninError('erro ao efetuar o login'));
     }

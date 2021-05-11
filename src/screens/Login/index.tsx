@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import {
   View,
@@ -7,7 +7,6 @@ import {
   Platform,
   TextInput,
   Alert,
-  Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,7 +15,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {loadSing} from '../../store/modules/Auth/actions';
 
-import {Container, Title} from './styles';
+import {Container, Title, TextError} from './styles';
 import colors from '../../helpers/colors';
 import {AuthState} from '../../store/modules/Auth/types';
 import {ApplicationState} from '../../store';
@@ -27,19 +26,20 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  //const {signIn} = useAuth();
   const {error}: AuthState = useSelector<ApplicationState>(state => state.auth);
 
   const dispatch = useDispatch();
 
   const passwordInputRef = useRef<TextInput>(null);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleSignin = useCallback(
     (data: SignInFormData) => {
       try {
-        dispatch(
-          loadSing({email: 'saviopf22@gmail.com', password: '6VIGa1$zCUW'}),
-        );
+        //loadSing({email: 'saviopf22@gmail.com', password: '6VIGa1$zCUW'}),
+        dispatch(loadSing({email, password}));
         console.log(data);
       } catch (error) {
         if (error.response) {
@@ -52,7 +52,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [dispatch],
+    [dispatch, email, password],
   );
 
   return (
@@ -72,32 +72,33 @@ const SignIn: React.FC = () => {
             </View>
 
             <Input
-              name="email"
+              value={email}
+              onChangeText={setEmail}
               placeholder="Email"
-              icon="mail"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
               autoCompleteType="off"
               returnKeyType="next"
               onSubmitEditing={() => {
-                passwordInputRef.current.focus();
+                passwordInputRef?.current?.focus();
               }}
             />
             <Input
+              value={password}
+              onChangeText={setPassword}
               ref={passwordInputRef}
-              name="password"
               placeholder="Senha"
-              icon="lock"
               textContentType="newPassword"
               returnKeyType="send"
               secureTextEntry
               onSubmitEditing={handleSignin}
             />
 
-            <Button onPress={handleSignin}>Entrar</Button>
-
-            <Text>{error}</Text>
+            <Button principal onPress={handleSignin}>
+              Entrar
+            </Button>
+            <TextError>{error}</TextError>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
