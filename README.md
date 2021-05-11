@@ -8,6 +8,7 @@
 ## passos para rodar o projeto:
 - `yarn` ou `npm install`
 - `yarn start` ou `npm start`
+- `react-native run-android` ou `react-native run-ios`
 
 ### prints:
 
