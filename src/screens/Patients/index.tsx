@@ -12,7 +12,7 @@ const Doctors: React.FC = () => {
   return (
     <Container>
       <TouchableOpacity onPress={() => {}}>
-        <Text>Sair 1</Text>
+        <Text>Patients</Text>
       </TouchableOpacity>
     </Container>
   );
