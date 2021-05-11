@@ -15,6 +15,7 @@ export const Container = styled.TouchableOpacity<ButtonsProps>`
   align-items: center;
   justify-content: center;
   padding: 5px;
+  margin-bottom: 5px;
 
   ${props =>
     props.principal &&

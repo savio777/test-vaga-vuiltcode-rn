@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-import {FlatList, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import api from '../../services/api';
 import {ApplicationState} from '../../store';
 import {AuthState} from '../../store/modules/Auth/types';
+import Modal from '../../components/Modal';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 import {Container} from './styles';
 
@@ -33,6 +36,11 @@ const Doctors: React.FC = () => {
   const [totalRecords, setTotalRecords] = useState(0);
   const [pageSize, setPageSize] = useState(0);
 
+  const [openModal, setOpenModal] = useState(true);
+  const [nameDoctorModal, setNameDoctorModal] = useState('');
+  const [crmDoctorModal, setCrmDoctorModal] = useState('');
+  const [crmUfDoctorModal, setCrmUfDoctorModal] = useState('');
+
   useEffect(() => {
     async function initialFunction() {
       try {
@@ -54,24 +62,44 @@ const Doctors: React.FC = () => {
   }, [accessToken]);
 
   return (
-    <Container>
-      {listDoctors.length === 0 && <Text>Nenhum médico cadastrado ainda.</Text>}
-      {/*<FlatList
-        keyExtractor={item => String(item.id)}
-        data={listDoctors}
-        renderItem={({item}) => (
-          <View>
-            <Text>{item.name}</Text>
-          </View>
+    <>
+      <Modal open={openModal}>
+        <Input
+          value={nameDoctorModal}
+          onChangeText={setNameDoctorModal}
+          placeholder="Nome"
+        />
+        <Input
+          value={crmDoctorModal}
+          onChangeText={setCrmDoctorModal}
+          placeholder="CRM"
+        />
+        <Input
+          value={crmUfDoctorModal}
+          onChangeText={setCrmUfDoctorModal}
+          placeholder="CRM UF"
+        />
+        <Button principal>Cadastrar</Button>
+        <Button principal onPress={() => setOpenModal(false)}>
+          Cancelar
+        </Button>
+      </Modal>
+
+      <Container>
+        {listDoctors.length === 0 && (
+          <Text>Nenhum médico cadastrado ainda.</Text>
         )}
-        //style={{borderWidth: 1, borderColor: '#ccc'}}
-        />*/}
-      {listDoctors.map(doctor => (
-        <View key={String(doctor.id)}>
-          <Text>{doctor.name}</Text>
-        </View>
-      ))}
-    </Container>
+        <Button principal onPress={() => setOpenModal(true)}>
+          Cadastrar Médico
+        </Button>
+
+        {listDoctors.map(doctor => (
+          <View key={String(doctor.id)}>
+            <Text>{doctor.name}</Text>
+          </View>
+        ))}
+      </Container>
+    </>
   );
 };
 
