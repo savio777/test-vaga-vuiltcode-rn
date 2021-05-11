@@ -1,19 +1,39 @@
 import React from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Stack = createStackNavigator();
+import colors from '../helpers/colors';
 
-import Dashboard from '../screens/Dashboard';
+import Doctors from '../screens/Doctors';
+import Patients from '../screens/Patients';
+
+const Tab = createBottomTabNavigator();
 
 const AuthRoutes: React.FC = () => (
-  <Stack.Navigator
-    headerMode="none"
-    screenOptions={{
-      cardStyle: {backgroundColor: '#312e38'},
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      tabBarIcon: ({focused, color, size}) => {
+        let iconName = '';
+
+        if (route.name === 'Doctors') {
+          iconName = focused ? 'doctor' : 'doctor';
+        } else if (route.name === 'Patients') {
+          iconName = focused ? 'account' : 'account-outline';
+        }
+
+        // You can return any component that you like here!
+        return <Icon name={iconName} size={size} color={color} />;
+      },
+    })}
+    tabBarOptions={{
+      activeTintColor: colors.orange,
+      inactiveTintColor: colors.blue,
+      labelStyle: {fontSize: 14},
     }}>
-    <Stack.Screen name="Dashboard" component={Dashboard} />
-  </Stack.Navigator>
+    <Tab.Screen name="Doctors" component={Doctors} />
+    <Tab.Screen name="Patients" component={Patients} />
+  </Tab.Navigator>
 );
 
 export default AuthRoutes;

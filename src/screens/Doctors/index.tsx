@@ -6,7 +6,7 @@ import {TouchableOpacity, Text} from 'react-native';
 
 import {Container} from './styles';
 
-const Dashboard: React.FC = () => {
+const Doctors: React.FC = () => {
   //const {signOut} = useAuth();
 
   return (
@@ -18,4 +18,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Doctors;
