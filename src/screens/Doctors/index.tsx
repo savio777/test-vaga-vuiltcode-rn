@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Text, Alert, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -19,6 +19,7 @@ interface IDoctors {
   id: string;
   name: string;
   crm: string;
+  crmUf: string;
   patients: Array<any>;
 }
 
@@ -40,28 +41,33 @@ const Doctors: React.FC = () => {
   const [pageSize, setPageSize] = useState(0);
 
   const [openModal, setOpenModal] = useState(false);
+  const [typeModalDoctor, setTypeModalDoctor] = useState<'create' | 'update'>(
+    'create',
+  );
+  const [idDoctorUpdate, setIdDoctorUpdate] = useState('');
   const [nameDoctorModal, setNameDoctorModal] = useState('');
   const [crmDoctorModal, setCrmDoctorModal] = useState('');
   const [crmUfDoctorModal, setCrmUfDoctorModal] = useState('');
 
-  useEffect(() => {
-    async function initialFunction() {
-      try {
-        const response = await api.get('/doctors', configsApi(accessToken));
+  const initialFunction = useCallback(async () => {
+    try {
+      const response = await api.get('/doctors', configsApi(accessToken));
 
-        const responseData: ResponseGetDoctors = response.data.data;
+      const responseData: ResponseGetDoctors = response.data.data;
 
-        setListDoctors([...responseData.itens]);
-        setTotalPages(responseData.totalPages);
-        setTotalRecords(responseData.totalRecords);
-        setPageSize(responseData.pageSize);
-      } catch (error) {
-        console.log('err ', error);
-        Alert.alert('Erro', 'Erro ao pegar lista');
-      }
+      setListDoctors([...responseData.itens]);
+      setTotalPages(responseData.totalPages);
+      setTotalRecords(responseData.totalRecords);
+      setPageSize(responseData.pageSize);
+    } catch (error) {
+      console.log('err ', error);
+      Alert.alert('Erro', 'Erro ao pegar lista');
     }
-    initialFunction();
   }, [accessToken]);
+
+  useEffect(() => {
+    initialFunction();
+  }, [initialFunction]);
 
   async function createDoctor() {
     try {
@@ -113,6 +119,49 @@ const Doctors: React.FC = () => {
     }
   }
 
+  function openModalEditDoctor(index: number) {
+    const doctor = listDoctors[index];
+
+    setOpenModal(true);
+    setIdDoctorUpdate(doctor.id);
+    setNameDoctorModal(doctor.name);
+    setCrmDoctorModal(doctor.crm);
+    setCrmUfDoctorModal(doctor.crmUf);
+    setTypeModalDoctor('update');
+  }
+
+  async function updateDoctor() {
+    try {
+      const response = await api.put(
+        `/doctors/update/${idDoctorUpdate}`,
+        {
+          name: nameDoctorModal,
+          crm: crmDoctorModal,
+          crmUf: crmUfDoctorModal,
+        },
+        configsApi(accessToken),
+      );
+
+      if (response.status === 200) {
+        setOpenModal(false);
+        setTypeModalDoctor('create');
+        setNameDoctorModal('');
+        setCrmDoctorModal('');
+        setCrmUfDoctorModal('');
+        initialFunction();
+
+        Alert.alert('Atualizado com sucesso', '');
+      }
+    } catch (error) {
+      if (error?.response?.data?.errors) {
+        Alert.alert('Erro!', error?.response?.data?.errors[0]);
+      } else {
+        Alert.alert('Erro!', '');
+      }
+      console.log('err', error);
+    }
+  }
+
   return (
     <>
       <Modal open={openModal}>
@@ -131,10 +180,22 @@ const Doctors: React.FC = () => {
           onChangeText={setCrmUfDoctorModal}
           placeholder="CRM UF"
         />
-        <Button principal onPress={() => createDoctor()}>
-          Cadastrar
+        <Button
+          principal
+          onPress={() => {
+            typeModalDoctor === 'create' ? createDoctor() : updateDoctor();
+          }}>
+          {typeModalDoctor === 'create' ? 'Cadastrar' : 'Editar'}
         </Button>
-        <Button principal onPress={() => setOpenModal(false)}>
+        <Button
+          principal
+          onPress={() => {
+            setOpenModal(false);
+            setTypeModalDoctor('create');
+            setNameDoctorModal('');
+            setCrmDoctorModal('');
+            setCrmUfDoctorModal('');
+          }}>
           Cancelar
         </Button>
       </Modal>
@@ -150,7 +211,7 @@ const Doctors: React.FC = () => {
         <ScrollView
           style={{height: '75%', width: '100%'}}
           contentContainerStyle={{flexGrow: 1, alignItems: 'center'}}>
-          {listDoctors.map(doctor => (
+          {listDoctors.map((doctor, index: number) => (
             <Cards key={String(doctor.id)}>
               <Title>
                 <Text>{doctor.name}</Text>
@@ -161,6 +222,7 @@ const Doctors: React.FC = () => {
                   color={colors.orange}
                   size={22}
                   style={{marginRight: 5}}
+                  onPress={() => openModalEditDoctor(index)}
                 />
                 <Icon
                   name="delete"
