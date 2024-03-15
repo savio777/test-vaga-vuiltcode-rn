@@ -13,6 +13,9 @@ const Tab = createBottomTabNavigator();
 const AuthRoutes: React.FC = () => (
   <Tab.Navigator
     screenOptions={({route}) => ({
+      tabBarActiveTintColor: colors.orange,
+      tabBarInactiveTintColor: colors.blue,
+      tabBarLabelStyle: {fontSize: 14},
       tabBarIcon: ({focused, color, size}) => {
         let iconName = '';
 
@@ -25,12 +28,7 @@ const AuthRoutes: React.FC = () => (
         // You can return any component that you like here!
         return <Icon name={iconName} size={size} color={color} />;
       },
-    })}
-    tabBarOptions={{
-      activeTintColor: colors.orange,
-      inactiveTintColor: colors.blue,
-      labelStyle: {fontSize: 14},
-    }}>
+    })}>
     <Tab.Screen name="Doctors" component={Doctors} />
     <Tab.Screen name="Patients" component={Patients} />
   </Tab.Navigator>

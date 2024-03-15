@@ -1,13 +1,13 @@
 import React from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 import Login from '../screens/Login';
 
 const Routes = () => (
-  <Stack.Navigator headerMode="none">
+  <Stack.Navigator screenOptions={{headerShown: false}}>
     <Stack.Screen name="Test" component={Login} />
   </Stack.Navigator>
 );

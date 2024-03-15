@@ -14,8 +14,6 @@ const Routes: React.FC = () => {
     state => state.auth,
   );
 
-  //const {user, loading} = useAuth();
-
   if (loading) {
     return <Loading />;
   }
